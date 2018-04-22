@@ -26,7 +26,8 @@ export class AlphaComponent implements OnInit {
     const {value, valid} = form;
     console.log('submitting form', this.user, form);
 
-    this._dataService.retrieveUser(this.user);
+    this._dataService.retrieveNumberOfFollowers(this.user);
+    this._dataService.retrieveRepos(this.user);
 
     this.user = new User();
     form.reset();
