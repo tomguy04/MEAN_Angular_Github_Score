@@ -19,14 +19,40 @@ export class DataService {
   followersArray$ =  new BehaviorSubject([]);
   reposArray$ =  new BehaviorSubject([]);
   // reposArray : Array<any>=[];
+  user$ = new BehaviorSubject([])
+  
 
   constructor(private _http: HttpClient) { }
+
+  // updateUser(username: string) {    
+  //   this.url  = this.base + username
+  //   this.http.get(this.base + username).subscribe(
+  //     (user: any[]) => {this.user.next(user)}
+  //   )
+  //   console.log('getUser ', this.user)
+  //   return this.url
+  // }
+
+  handleError(error) {
+    console.log('GOT AN error**********');
+  }
+
+  retrieveUser(user:User){
+    console.log('retrieving**********');
+    this._http.get<any[]>(this.base+`${user.name}`)
+    .subscribe(
+      (user:any[])=> {this.user$.next(user);
+        (error) => this.handleError(error);
+      }
+    )
+    return(this.base+`${user.name}`); 
+  }
+  
 
   retrieveRepos(user:User){
     this._http.get<any[]>(this.base+`${user.name}`+'/repos').subscribe(
       (reposArray:any[])=> {this.reposArray$.next(reposArray);}
     )
-    // console.log(this.reposArray);
   }
 
   retrieveNumberOfFollowers(user:User){
@@ -35,44 +61,15 @@ export class DataService {
     console.log('the get is...');
 
     //below, we need to define the type of information we are getting.  It needs to conform to the 
-    //tpe of informatio we are returning..Observable<User>
+    //type of information we are returning..Observable<User>
     //whatever we are getting back from the base api will return to us <User> information
     //*we dont need map, the http.get is trandforming the data to json data.
-    // return this._http.get<number>(`this.base+${user}`);
 
-    // this._http.get<number>(this.base+`${user.name}`+'/followers').subscribe(
-    //   (numOfFollowers:number)=> {this.followers$.next(numOfFollowers);}
-    // )
-
-    this._http.get<any[]>(this.base+`${user.name}`+'/followers?per_page=100').subscribe(
+    this._http.get<any[]>(this.base+`${user.name}`+'/followers?per_page=100')
+    .subscribe(
       (followersArray:any[])=> {this.followersArray$.next(followersArray);}
     )
 
-
-    // this._http.get(`https://api.github.com/users/${user.name}/followers`).subscribe(
-    //   (followers: number) => {this.followers$.next(followers);}
-    // )
-    
-    // this._http.get(`https://api.github.com/users/${user.name}`)
-    
-    
-    // .toPromise()
-    // .then(map(response => response.json())
-    // .catch(this.handleError);
-
-    // .then(response => response.json().data as Hero[])
-    // .catch(this.handleError);
-    // .map(response => response.json())
-
-    //.subscribe(result => this.result =result.toPromise());
-
-    // http.get('friends.json')
-    // .map(response => response.json())
-    // .subscribe(result => this.result =result);
     }
   }
 
-
-
-    // let httpParams = new HttpParams().set(name,user.name);
-    // this._http.get('https://api.github.com/users/${user}', {params: name})

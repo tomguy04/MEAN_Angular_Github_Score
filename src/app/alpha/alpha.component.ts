@@ -12,12 +12,13 @@ import { DataService } from '../data.service';
 export class AlphaComponent implements OnInit {
   user: User = new User ();
   myScore:number;
+  userUrl:string = '';
 
   constructor(private _dataService:DataService) { }
 
   ngOnInit() {
-    this._dataService.score$.subscribe(val=>{this.myScore = val;}
-    )
+    // this._dataService.score$.subscribe(val=>{this.myScore = val;}
+    // )
   }
   
 
@@ -26,8 +27,10 @@ export class AlphaComponent implements OnInit {
     const {value, valid} = form;
     console.log('submitting form', this.user, form);
 
-    this._dataService.retrieveNumberOfFollowers(this.user);
-    this._dataService.retrieveRepos(this.user);
+    this.userUrl = this._dataService.retrieveUser(this.user);
+    console.log(`userUrl ${this.userUrl}`)
+    // this._dataService.retrieveNumberOfFollowers(this.user);
+    // this._dataService.retrieveRepos(this.user);
 
     this.user = new User();
     form.reset();
